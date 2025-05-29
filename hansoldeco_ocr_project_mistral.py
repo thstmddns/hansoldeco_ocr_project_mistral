@@ -198,8 +198,10 @@ def process_images_to_excel(folder_path, max_workers=1):
             .str.replace("\\\\times", "x", regex=True)
             .str.replace("×", "x", regex=False)
             .str.replace("*", "x", regex=False)
+            .str.replace(r"\s*x\s*", "x", regex=True)  # 공백 제거 포함된 곱셈 정규화
             .str.strip()
         )
+
         df["파일링크"] = df.apply(
             lambda row: f'=HYPERLINK("{row["키워드"].split(",")[0]}/{row["파일명"]}", "{row["파일명"]}")',
             axis=1
