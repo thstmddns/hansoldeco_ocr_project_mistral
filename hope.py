@@ -6,7 +6,7 @@ import logging
 import difflib
 import tempfile
 import pandas as pd
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor as Executor, as_completed
 from mistralai import Mistral
 from httpx import HTTPStatusError
 import streamlit as st
@@ -172,7 +172,7 @@ def process_images_to_excel(folder_path, max_workers=1):
     total = len(file_list)
     completed = 0
     
-    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+    with Executor(max_workers=max_workers) as executor:
         futures = {executor.submit(process_one_image, fp): fp for fp in file_list}
         for future in as_completed(futures):
             rec = future.result()
