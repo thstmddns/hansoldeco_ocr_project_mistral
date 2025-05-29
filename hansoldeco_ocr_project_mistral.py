@@ -191,7 +191,15 @@ def process_images_to_excel(folder_path, max_workers=1):
         df = pd.DataFrame(records, columns=columns)
         df["동"] = pd.to_numeric(df["동"], errors="coerce").astype("Int64")
         df["호"] = pd.to_numeric(df["호"], errors="coerce").astype("Int64")
-        df["치수"] = df["치수"].astype(str).str.replace("$", "", regex=False).str.strip()
+        df["치수"] = (
+            df["치수"]
+            .astype(str)
+            .str.replace("$", "", regex=False)
+            .str.replace("\\\\times", "x", regex=True)
+            .str.replace("×", "x", regex=False)
+            .str.replace("*", "x", regex=False)
+            .str.strip()
+        )
         df["파일링크"] = df.apply(
             lambda row: f'=HYPERLINK("{row["키워드"].split(",")[0]}/{row["파일명"]}", "{row["파일명"]}")',
             axis=1
