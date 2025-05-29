@@ -14,7 +14,7 @@ from classify import classify_and_move_files
 import shutil
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-api_key = st.secrets["MISTRAL_API_KEY"]
+api_key = 'd4Asx3f3ppgaloj7pfTqLHMIDWjcCkpj'
 if not api_key:
     raise EnvironmentError("MISTRAL_API_KEY 환경 변수가 설정되지 않았습니다.")
 client = Mistral(api_key=api_key)
@@ -191,6 +191,7 @@ def process_images_to_excel(folder_path, max_workers=1):
         df = pd.DataFrame(records, columns=columns)
         df["동"] = pd.to_numeric(df["동"], errors="coerce").astype("Int64")
         df["호"] = pd.to_numeric(df["호"], errors="coerce").astype("Int64")
+        df["치수"] = df["치수"].astype(str).apply(lambda x: f"'{x}")
         df["파일링크"] = df.apply(
             lambda row: f'=HYPERLINK("{row["키워드"].split(",")[0]}/{row["파일명"]}", "{row["파일명"]}")',
             axis=1
